@@ -22,7 +22,6 @@ import 'package:stream_action_events/stream_action_events.dart';
 ///
 class StreamMaestro<T> {
   StreamMaestro();
-  //test adding some comment 2
 
   /// The [StreamController] to provide a sink for all UI events
   final StreamController<StreamActionEvent<T>> _streamController =
@@ -95,4 +94,10 @@ class StreamMaestro<T> {
     _streamSubscription = null;
     await _streamController.close();
   }
+
+  /// Check if the StreamMaestro is currently active.
+  ///
+  /// Returns `true` if the stream controller is open and accepting events,
+  /// `false` otherwise.
+  bool get isActive => !_streamController.isClosed;
 }
