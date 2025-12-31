@@ -1,3 +1,7 @@
+## 0.2.0
+
+* feat: add hasActiveSubscription getter to check stream status
+
 ## 0.1.2
 
 * chore: bump version to 0.1.2 and fix create-tag trigger
