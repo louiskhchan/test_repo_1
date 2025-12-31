@@ -1,3 +1,7 @@
+## 0.1.1
+
+* Version bump for testing tag workflow
+
 ## 0.1.0
 
 * Add isActive getter to StreamMaestro class to check if stream is active
