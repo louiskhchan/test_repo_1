@@ -1,6 +1,6 @@
 name: test_repo_1
 description: "Provides a [StreamMaestro] class for managing and streaming UI data and action events to CMiC UI components such as the MDV and LOV. It also provides extensions to convert ItemOperation streams from the Repository into StreamItemEvent streams, so they can be consumed by the StreamMaestro."
-version: 0.1.1
+version: 0.1.2
 publish_to: none
 
 environment:
