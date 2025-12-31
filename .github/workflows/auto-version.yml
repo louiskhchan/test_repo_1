@@ -77,9 +77,6 @@ jobs:
           COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
         run: |
           export PATH="$HOME/.local/bin:$PATH"
-
-          echo  "GITHUB_TOKEN: $GITHUB_TOKEN" 
-          echo  "COPILOT_GITHUB_TOKEN: $COPILOT_GITHUB_TOKEN" 
           
           # Configure git for commits
           git config user.name "github-actions[bot]"
