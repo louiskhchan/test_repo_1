@@ -2,6 +2,8 @@
 
 A CMiC Flutter package for managing and streaming UI data and action events to UI components like Master Details View (MDV) and List of Values (LOV).
 
+> **Note:** This package includes automated GitHub Actions workflows for tag creation and release management.
+
 ## Installation
 
 Add to your `pubspec.yaml`:
