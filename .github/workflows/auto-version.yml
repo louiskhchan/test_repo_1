@@ -78,8 +78,8 @@ jobs:
         run: |
           export PATH="$HOME/.local/bin:$PATH"
 
-          echo  "$GITHUB_TOKEN" 
-          echo  "$COPILOT_GITHUB_TOKEN" 
+          echo  "GITHUB_TOKEN: $GITHUB_TOKEN" 
+          echo  "COPILOT_GITHUB_TOKEN: $COPILOT_GITHUB_TOKEN" 
           
           # Configure git for commits
           git config user.name "github-actions[bot]"
