@@ -100,4 +100,10 @@ class StreamMaestro<T> {
   /// Returns `true` if the stream controller is open and accepting events,
   /// `false` otherwise.
   bool get isActive => !_streamController.isClosed;
+
+  /// Check if the StreamMaestro has an active data stream subscription.
+  ///
+  /// Returns `true` if a stream has been added via [addStream] and is still
+  /// active, `false` otherwise.
+  bool get hasActiveSubscription => _streamSubscription != null;
 }
