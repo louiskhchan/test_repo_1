@@ -1,0 +1,150 @@
+name: Auto-Version on PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+concurrency:
+  group: auto-version-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  auto-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Check skip conditions
+        id: check-skip
+        run: |
+          # Check if last commit message contains [skip ci]
+          COMMIT_MSG='${{ github.event.pull_request.head.commit.message }}'
+          if echo "$COMMIT_MSG" | grep -qi "\[skip ci\]"; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "reason=Last commit has [skip ci]" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Check for skip-auto-version label
+          LABELS='${{ toJSON(github.event.pull_request.labels.*.name) }}'
+          if echo "$LABELS" | grep -q "skip-auto-version"; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "reason=Has skip-auto-version label" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Check if PR is draft
+          if [[ "${{ github.event.pull_request.draft }}" == "true" ]]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "reason=PR is draft" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          echo "skip=false" >> $GITHUB_OUTPUT
+
+      - name: Checkout PR branch
+        if: steps.check-skip.outputs.skip == 'false'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Check if pubspec.yaml exists
+        id: check-pubspec
+        if: steps.check-skip.outputs.skip == 'false'
+        run: |
+          if [ ! -f "pubspec.yaml" ]; then
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "⏭️ No pubspec.yaml found, skipping"
+          else
+            echo "exists=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install GitHub Copilot CLI
+        if: steps.check-skip.outputs.skip == 'false' && steps.check-pubspec.outputs.exists == 'true'
+        run: |
+          curl -fsSL https://gh.io/copilot-install | bash
+          export PATH="$HOME/.local/bin:$PATH"
+          copilot --version || echo "Copilot CLI installed"
+
+      - name: Auto-version with Copilot CLI
+        if: steps.check-skip.outputs.skip == 'false' && steps.check-pubspec.outputs.exists == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          
+          # Configure git for commits
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Trust the current directory
+          mkdir -p ~/.copilot
+          echo '{"trusted_folders": ["'"$PWD"'"]}' > ~/.copilot/config.json
+          
+          # Run Copilot CLI to handle auto-versioning
+          copilot -p "
+          You are an automated versioning assistant for a Flutter/Dart package.
+          
+          TASK: Analyze PR changes and automatically version this package using semantic versioning.
+          
+          CONTEXT:
+          - PR: ${{ github.event.pull_request.html_url }}
+          - Base branch: main
+          - PR branch: ${{ github.event.pull_request.head.ref }}
+          
+          STEPS:
+          1. Get diff between origin/main and HEAD
+          2. Read current version from origin/main's pubspec.yaml
+          3. Analyze diff and determine semantic version bump (major/minor/patch)
+          4. Calculate new version
+          5. Check if tag v{version} exists remotely - if yes, increment patch until available
+          6. Update pubspec.yaml with new version
+          7. If CHANGELOG.md wasn't modified in this PR, prepend new entry
+          8. Commit with: 'chore: auto-version to {version} [skip ci]'
+          9. Push to origin
+          10. Print exactly:
+              FINAL_VERSION: {version}
+              HAD_CONFLICT: {true|false}
+          
+          Begin now.
+          " --allow-all-tools -s | tee /tmp/copilot-output.txt
+          
+          echo "---"
+          echo "🤖 Copilot CLI finished execution"
+
+      - name: Post PR comment
+        if: steps.check-skip.outputs.skip == 'false' && steps.check-pubspec.outputs.exists == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let message = '✅ Auto-versioning completed by Copilot CLI';
+            
+            // Try to parse Copilot output for version info
+            try {
+              const output = fs.readFileSync('/tmp/copilot-output.txt', 'utf8');
+              const versionMatch = output.match(/FINAL_VERSION:\s*(.+)/i);
+              const conflictMatch = output.match(/HAD_CONFLICT:\s*(true|false)/i);
+              
+              if (versionMatch) {
+                const version = versionMatch[1].trim();
+                message = `✅ Auto-versioned to **${version}**`;
+                
+                if (conflictMatch && conflictMatch[1] === 'true') {
+                  message += '\n\n⚠️ Version conflict detected, bumped to next available version';
+                }
+              }
+            } catch (error) {
+              console.log('Could not parse Copilot output:', error.message);
+            }
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: message
+            });
