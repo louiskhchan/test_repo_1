@@ -1,7 +1,8 @@
 name: Create Git Tag
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches: [main]
 
 concurrency:
@@ -9,6 +10,7 @@ concurrency:
 
 jobs:
   create-tag:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       contents: write
