@@ -1,0 +1,31 @@
+name: test_repo_1
+description: "Provides a [StreamMaestro] class for managing and streaming UI data and action events to CMiC UI components such as the MDV and LOV. It also provides extensions to convert ItemOperation streams from the Repository into StreamItemEvent streams, so they can be consumed by the StreamMaestro."
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.6.2
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  rxdart: ^0.28.0
+
+  # CMiC Flutter packages
+  repository:
+    git:
+      url: https://github.com/CMiC-Flutter/repository
+      ref: b87b27c2ad4e33898cb6458b3ff8adc619bfaec3
+  stream_action_events:
+    git:
+      url: https://github.com/CMiC-Flutter/stream_action_events
+      ref: 86b984da35f453ce06fae729a03fdd266c708db5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  cmic_lints:
+    git:
+      url: https://github.com/CMiC-Flutter/cmic_lints
+

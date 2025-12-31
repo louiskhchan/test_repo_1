@@ -1,0 +1,29 @@
+# This file configures the analyzer, which statically analyzes Dart code to
+# check for errors, warnings, and lints.
+#
+# For a list of lints, see: http://dart-lang.github.io/linter/lints/
+#
+# Please refer to
+# https://cmicglobal.sharepoint.com/:u:/s/DevDocs/EVbjgRf9FKJIsWAvPKOIfMsBZs3IcXu4TTQVFctmHwfa_w?e=EP2VPJ
+# for the CMiC Code Standard for Flutter.
+#
+# We use the cmic_lints package, https://github.com/CMiC-Flutter/cmic_lints,
+# which activates a set of recommended lints for CMiC Flutter apps, packages,
+# and plugins designed to encourage good coding practices.
+
+include: package:cmic_lints/cmic_lints.yaml
+
+linter:
+  # The lint rules applied to this project can be customized in the section
+  # below to disable rules from the `package:cmic_lints/cmic_lints.yaml`
+  # included above or to enable additional rules.
+  #
+  # Generally, unless there is a specific requirement for this project, please
+  # discuss any changes to the linter rule set with the Flutter Code Reviewers'
+  # meeting group or in the Flutter channel. It is preferable to make changes to
+  # the cmic_lints package rather than adding or disabling rules here.
+
+  rules:
+
+    # Additional information about this file can be found at
+    # https://dart.dev/guides/language/analysis-options
