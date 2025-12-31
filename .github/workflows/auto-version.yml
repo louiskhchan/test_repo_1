@@ -73,8 +73,7 @@ jobs:
       - name: Auto-version with Copilot CLI
         if: steps.check-skip.outputs.skip == 'false' && steps.check-pubspec.outputs.exists == 'true'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
         run: |
           export PATH="$HOME/.local/bin:$PATH"
           
