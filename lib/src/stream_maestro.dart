@@ -73,8 +73,9 @@ class StreamMaestro<T> {
     }
   }
 
-  /// Add an error to the output stream via [_streamController]
+  /// Add an error to the output stream via [_streamController].
   ///
+  /// [e] is the error object to add, and [s] is an optional stack trace.
   void addError(
     Object e, [
     StackTrace? s,
