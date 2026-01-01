@@ -1,3 +1,7 @@
+## 0.3.1
+
+* fix: improve addError documentation with parameter descriptions
+
 ## 0.3.0
 
 * feat: add listenerCount getter to track active listeners
