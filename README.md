@@ -4,6 +4,13 @@ A CMiC Flutter package for managing and streaming UI data and action events to U
 
 > **Note:** This package includes automated GitHub Actions workflows for tag creation and release management.
 
+## Features
+
+- Unified stream management for data and UI action events
+- Seamless integration with CMiC Repository pattern
+- Support for Master Details View (MDV) and List of Values (LOV) components
+- Built-in status checking for active streams and subscriptions
+
 ## Installation
 
 Add to your `pubspec.yaml`:
