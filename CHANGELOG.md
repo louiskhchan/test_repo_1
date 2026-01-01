@@ -1,3 +1,7 @@
+## 0.2.1
+
+* docs: add features section to README
+
 ## 0.2.0
 
 * feat: add hasActiveSubscription getter to check stream status
