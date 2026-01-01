@@ -1,3 +1,7 @@
+## 0.3.0
+
+* feat: add listenerCount getter to track active listeners
+
 ## 0.2.1
 
 * docs: add features section to README
