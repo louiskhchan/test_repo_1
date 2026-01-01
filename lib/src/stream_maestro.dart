@@ -106,4 +106,10 @@ class StreamMaestro<T> {
   /// Returns `true` if a stream has been added via [addStream] and is still
   /// active, `false` otherwise.
   bool get hasActiveSubscription => _streamSubscription != null;
+
+  /// Get the number of listeners to the output stream.
+  ///
+  /// Returns the count of active listeners subscribed to this StreamMaestro's
+  /// output stream.
+  int get listenerCount => _streamController.hasListener ? 1 : 0;
 }
