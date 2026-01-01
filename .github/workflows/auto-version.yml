@@ -79,8 +79,8 @@ jobs:
           export PATH="$HOME/.local/bin:$PATH"
           
           # Configure git for commits
-          # git config user.name "github-actions[bot]"
-          # git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "Copilot CLI"
+          git config user.email "copilot-cli@users.noreply.github.com"
           
           # Trust the current directory
           mkdir -p ~/.copilot
